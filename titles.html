@@ -1,0 +1,1923 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Тайтлы — My Studio</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* =========================
+           PAGE HEADER
+        ========================= */
+
+        .page-header {
+            padding: 90px 0 45px;
+        }
+
+        .page-header-top {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .page-label {
+            color: #a78bfa;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .page-header h1 {
+            margin-top: 8px;
+            font-size: clamp(38px, 5vw, 58px);
+            letter-spacing: -2px;
+        }
+
+        .page-header p {
+            max-width: 600px;
+            margin-top: 12px;
+            color: #aaa5b8;
+            line-height: 1.6;
+        }
+
+        /* =========================
+           CONTROLS
+        ========================= */
+
+        .title-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            margin-bottom: 35px;
+            padding: 15px;
+
+            background: #0e0c16;
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 16px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+        }
+
+        .search-box span {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+
+            color: #77717f;
+        }
+
+        .search-box input {
+            width: 100%;
+
+            padding: 13px 15px 13px 42px;
+
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 11px;
+
+            outline: none;
+
+            background: #12101c;
+            color: white;
+
+            font-family: inherit;
+        }
+
+        .search-box input:focus {
+            border-color: #8b5cf6;
+        }
+
+        .filter-select {
+            min-width: 180px;
+
+            padding: 13px 15px;
+
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 11px;
+
+            outline: none;
+
+            background: #12101c;
+            color: white;
+
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            border-color: #8b5cf6;
+        }
+
+        /* =========================
+           ADMIN
+        ========================= */
+
+        .admin-panel {
+            display: none;
+            align-items: center;
+            gap: 10px;
+
+            margin-bottom: 25px;
+            padding: 14px;
+
+            background: rgba(139,92,246,.08);
+            border: 1px solid rgba(139,92,246,.25);
+            border-radius: 15px;
+        }
+
+        .admin-panel.visible {
+            display: flex;
+        }
+
+        .admin-button {
+            padding: 10px 16px;
+
+            border: 0;
+            border-radius: 10px;
+
+            background: #8b5cf6;
+            color: white;
+
+            font-weight: 700;
+            cursor: pointer;
+
+            transition: .2s;
+        }
+
+        .admin-button:hover {
+            background: #a78bfa;
+            transform: translateY(-1px);
+        }
+
+        .admin-status {
+            margin-left: auto;
+
+            color: #a78bfa;
+            font-size: 13px;
+        }
+
+        /* =========================
+           TITLE GRID
+        ========================= */
+
+        .titles-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 20px;
+
+            padding-bottom: 100px;
+        }
+
+        .title-card {
+            position: relative;
+
+            overflow: hidden;
+
+            background: #12101c;
+
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 18px;
+
+            transition: .25s;
+        }
+
+        .title-card:hover {
+            transform: translateY(-5px);
+
+            border-color:
+                rgba(139,92,246,.45);
+
+            background: #181523;
+
+            box-shadow:
+                0 18px 50px rgba(0,0,0,.3);
+        }
+
+        .title-cover {
+            position: relative;
+
+            height: 320px;
+
+            overflow: hidden;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2b1749,
+                    #0d0913
+                );
+        }
+
+        .title-cover img {
+            width: 100%;
+            height: 100%;
+
+            display: block;
+
+            object-fit: cover;
+
+            transition: .35s;
+        }
+
+        .title-card:hover .title-cover img {
+            transform: scale(1.04);
+        }
+
+        .cover-placeholder {
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background:
+                radial-gradient(
+                    circle at 50% 35%,
+                    rgba(139,92,246,.35),
+                    transparent 40%
+                ),
+                linear-gradient(
+                    145deg,
+                    #2a1646,
+                    #0c0911
+                );
+
+            color: rgba(255,255,255,.18);
+
+            font-size: 42px;
+            font-weight: 900;
+        }
+
+        .status-badge {
+            position: absolute;
+
+            top: 12px;
+            left: 12px;
+
+            padding: 6px 10px;
+
+            border-radius: 8px;
+
+            color: white;
+
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .status-ongoing {
+            background: #8b5cf6;
+        }
+
+        .status-completed {
+            background: #16a34a;
+        }
+
+        .status-planned {
+            background: #475569;
+        }
+
+        .status-paused {
+            background: #d97706;
+        }
+
+        .rating {
+            position: absolute;
+
+            top: 12px;
+            right: 12px;
+
+            padding: 6px 9px;
+
+            border-radius: 8px;
+
+            background: rgba(0,0,0,.7);
+
+            color: #facc15;
+
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .title-content {
+            padding: 18px;
+        }
+
+        .title-name {
+            color: white;
+
+            font-size: 18px;
+            font-weight: 800;
+
+            line-height: 1.25;
+        }
+
+        .title-original {
+            margin-top: 5px;
+
+            color: #716b7b;
+
+            font-size: 11px;
+        }
+
+        .title-description {
+            display: -webkit-box;
+
+            margin-top: 10px;
+
+            overflow: hidden;
+
+            color: #aaa5b8;
+
+            font-size: 12px;
+            line-height: 1.55;
+
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+        }
+
+        .title-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-top: 16px;
+            padding-top: 14px;
+
+            border-top: 1px solid rgba(255,255,255,.06);
+
+            color: #77717f;
+
+            font-size: 11px;
+        }
+
+        .title-actions {
+            display: flex;
+            gap: 7px;
+
+            margin-top: 14px;
+        }
+
+        .title-open {
+            flex: 1;
+
+            padding: 9px;
+
+            border-radius: 9px;
+
+            background: rgba(139,92,246,.12);
+
+            color: #a78bfa;
+
+            text-align: center;
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .title-open:hover {
+            background: rgba(139,92,246,.22);
+        }
+
+        .edit-title,
+        .delete-title {
+            width: 38px;
+            height: 38px;
+
+            border: 0;
+            border-radius: 9px;
+
+            color: white;
+
+            cursor: pointer;
+        }
+
+        .edit-title {
+            background: #4c1d95;
+        }
+
+        .delete-title {
+            background: #7f1d1d;
+        }
+
+        .empty-titles {
+            grid-column: 1 / -1;
+
+            padding: 80px 20px;
+
+            text-align: center;
+
+            color: #66616d;
+        }
+
+        .empty-titles-icon {
+            margin-bottom: 15px;
+
+            font-size: 40px;
+        }
+
+        /* =========================
+           MODAL
+        ========================= */
+
+        .modal {
+            position: fixed;
+            inset: 0;
+
+            z-index: 1000;
+
+            display: none;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            background: rgba(0,0,0,.85);
+
+            backdrop-filter: blur(8px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-window {
+            position: relative;
+
+            width: min(650px, 100%);
+            max-height: 90vh;
+
+            overflow-y: auto;
+
+            padding: 30px;
+
+            background: #120d1b;
+
+            border: 1px solid #6d28d9;
+            border-radius: 20px;
+        }
+
+        .modal-window h2 {
+            margin-bottom: 25px;
+
+            color: #a78bfa;
+
+            text-align: center;
+        }
+
+        .close-modal {
+            position: absolute;
+
+            top: 12px;
+            right: 15px;
+
+            width: 35px;
+            height: 35px;
+
+            border: 0;
+            background: transparent;
+
+            color: #888;
+
+            font-size: 22px;
+
+            cursor: pointer;
+        }
+
+        .close-modal:hover {
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #aaa5b8;
+
+            font-size: 13px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+
+            padding: 12px 14px;
+
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 10px;
+
+            outline: none;
+
+            background: #0d0a12;
+            color: white;
+
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #8b5cf6;
+        }
+
+        .form-row {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 12px;
+        }
+
+        .save-title {
+            width: 100%;
+
+            margin-top: 8px;
+            padding: 14px;
+
+            border: 0;
+            border-radius: 12px;
+
+            background: #8b5cf6;
+
+            color: white;
+
+            font-weight: 800;
+
+            cursor: pointer;
+        }
+
+        .save-title:hover {
+            background: #a78bfa;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 1050px) {
+
+            .titles-grid {
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 800px) {
+
+            .titles-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .title-controls {
+                flex-direction: column;
+            }
+
+            .search-box,
+            .filter-select {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 550px) {
+
+            .page-header {
+                padding-top: 65px;
+            }
+
+            .page-header-top {
+                display: block;
+            }
+
+            .titles-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .title-cover {
+                height: 380px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-panel {
+                flex-wrap: wrap;
+            }
+
+            .admin-status {
+                width: 100%;
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="container header-inner">
+
+        <a href="index.html" class="logo">
+            <span class="logo-main">MY</span>
+            <span class="logo-sub">STUDIO</span>
+        </a>
+
+        <nav class="navigation">
+
+            <a href="index.html">
+                Главная
+            </a>
+
+            <a href="titles.html" class="active">
+                Тайтлы
+            </a>
+
+            <a href="sostav.html">
+                Состав
+            </a>
+
+            <a href="#">
+                DUB-in
+            </a>
+
+        </nav>
+
+        <div class="header-actions">
+
+            <button
+                class="search-button"
+                onclick="focusSearch()">
+                🔍
+            </button>
+
+            <button
+                class="login-button"
+                onclick="alert('Авторизация будет подключена позже')">
+                Войти
+            </button>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<main>
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <section class="page-header">
+
+        <div class="container">
+
+            <div class="page-header-top">
+
+                <div>
+
+                    <span class="page-label">
+                        PROJECTS
+                    </span>
+
+                    <h1>
+                        Наши тайтлы
+                    </h1>
+
+                    <p>
+                        Проекты, над которыми работает
+                        наша студия озвучки.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section>
+
+        <div class="container">
+
+            <!-- =========================
+                 ADMIN PANEL
+            ========================= -->
+
+            <div
+                id="adminPanel"
+                class="admin-panel">
+
+                <button
+                    class="admin-button"
+                    onclick="openAddTitleModal()">
+
+                    ➕ Добавить тайтл
+
+                </button>
+
+                <button
+                    class="admin-button"
+                    onclick="renderTitles()">
+
+                    🔄 Обновить
+
+                </button>
+
+                <span class="admin-status">
+                    👑 Режим администратора
+                </span>
+
+            </div>
+
+
+            <!-- =========================
+                 SEARCH
+            ========================= -->
+
+            <div class="title-controls">
+
+                <div class="search-box">
+
+                    <span>
+                        🔍
+                    </span>
+
+                    <input
+                        id="titleSearch"
+                        type="text"
+                        placeholder="Поиск по названию..."
+                        autocomplete="off">
+
+                </div>
+
+
+                <select
+                    id="statusFilter"
+                    class="filter-select">
+
+                    <option value="all">
+                        Все статусы
+                    </option>
+
+                    <option value="ongoing">
+                        В работе
+                    </option>
+
+                    <option value="completed">
+                        Завершено
+                    </option>
+
+                    <option value="planned">
+                        Запланировано
+                    </option>
+
+                    <option value="paused">
+                        Приостановлено
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- =========================
+                 TITLES
+            ========================= -->
+
+            <div
+                id="titlesGrid"
+                class="titles-grid">
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="container footer-inner">
+
+        <div>
+
+            <div class="footer-logo">
+                MY STUDIO
+            </div>
+
+            <p>
+                Студия озвучки и команда,
+                объединённая любимыми проектами.
+            </p>
+
+        </div>
+
+        <div class="footer-links">
+
+            <a href="index.html">
+                Главная
+            </a>
+
+            <a href="titles.html">
+                Тайтлы
+            </a>
+
+            <a href="sostav.html">
+                Состав
+            </a>
+
+            <a href="#">
+                DUB-in
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="copyright">
+        © 2026 My Studio
+    </div>
+
+</footer>
+
+
+<!-- =========================
+     ADD / EDIT MODAL
+========================= -->
+
+<div
+    id="titleModal"
+    class="modal">
+
+    <div class="modal-window">
+
+        <button
+            class="close-modal"
+            onclick="closeTitleModal()">
+
+            ✕
+
+        </button>
+
+        <h2 id="modalTitle">
+            ➕ Добавить тайтл
+        </h2>
+
+
+        <form id="titleForm">
+
+            <input
+                type="hidden"
+                id="editTitleId">
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label>
+                        ID тайтла
+                    </label>
+
+                    <input
+                        id="titleId"
+                        type="text"
+                        placeholder="например: solo-leveling"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Название
+                    </label>
+
+                    <input
+                        id="titleName"
+                        type="text"
+                        placeholder="Название тайтла"
+                        required>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Оригинальное название
+                </label>
+
+                <input
+                    id="titleOriginal"
+                    type="text"
+                    placeholder="Original title">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    URL постера
+                </label>
+
+                <input
+                    id="titleImage"
+                    type="text"
+                    placeholder="https://example.com/poster.jpg">
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label>
+                        Статус
+                    </label>
+
+                    <select id="titleStatus">
+
+                        <option value="ongoing">
+                            В работе
+                        </option>
+
+                        <option value="completed">
+                            Завершено
+                        </option>
+
+                        <option value="planned">
+                            Запланировано
+                        </option>
+
+                        <option value="paused">
+                            Приостановлено
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Жанр
+                    </label>
+
+                    <input
+                        id="titleGenre"
+                        type="text"
+                        placeholder="Аниме, сериал...">
+
+                </div>
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label>
+                        Количество серий
+                    </label>
+
+                    <input
+                        id="titleEpisodes"
+                        type="number"
+                        min="0"
+                        placeholder="12">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Рейтинг
+                    </label>
+
+                    <input
+                        id="titleRating"
+                        type="number"
+                        min="0"
+                        max="10"
+                        step="0.1"
+                        placeholder="8.5">
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Описание
+                </label>
+
+                <textarea
+                    id="titleDescription"
+                    placeholder="Описание проекта..."></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Год
+                </label>
+
+                <input
+                    id="titleYear"
+                    type="number"
+                    min="1900"
+                    max="2100"
+                    placeholder="2026">
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="save-title">
+
+                💾 Сохранить тайтл
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* =====================================
+       ДАННЫЕ
+    ===================================== */
+
+    let titles = JSON.parse(
+        localStorage.getItem("myStudioTitles")
+    ) || [
+
+        {
+            id: "example-project",
+
+            name: "Пример проекта",
+
+            originalName: "Example Project",
+
+            image: "",
+
+            status: "completed",
+
+            genre: "Аниме",
+
+            episodes: 12,
+
+            rating: 8.5,
+
+            year: 2026,
+
+            description:
+                "Это демонстрационный тайтл. Здесь позже будут находиться реальные проекты твоей студии."
+        },
+
+        {
+            id: "new-project",
+
+            name: "Новый проект",
+
+            originalName: "New Project",
+
+            image: "",
+
+            status: "ongoing",
+
+            genre: "Сериал",
+
+            episodes: 8,
+
+            rating: 9.1,
+
+            year: 2026,
+
+            description:
+                "Второй демонстрационный проект студии. Его можно изменить через админ-панель."
+        }
+
+    ];
+
+
+    /* =====================================
+       СОХРАНЕНИЕ
+    ===================================== */
+
+    function saveTitles() {
+
+        localStorage.setItem(
+            "myStudioTitles",
+            JSON.stringify(titles)
+        );
+
+    }
+
+
+    /* =====================================
+       STATUS
+    ===================================== */
+
+    function getStatusText(status) {
+
+        const statuses = {
+
+            ongoing: "В работе",
+
+            completed: "Завершено",
+
+            planned: "Запланировано",
+
+            paused: "Приостановлено"
+
+        };
+
+        return statuses[status] || "Неизвестно";
+
+    }
+
+
+    /* =====================================
+       ПОИСК
+    ===================================== */
+
+    const searchInput =
+        document.getElementById("titleSearch");
+
+
+    const statusFilter =
+        document.getElementById("statusFilter");
+
+
+    searchInput.addEventListener(
+        "input",
+        renderTitles
+    );
+
+
+    statusFilter.addEventListener(
+        "change",
+        renderTitles
+    );
+
+
+    /* =====================================
+       ОТРИСОВКА
+    ===================================== */
+
+    function renderTitles() {
+
+        const grid =
+            document.getElementById("titlesGrid");
+
+
+        const search =
+            searchInput.value
+                .trim()
+                .toLowerCase();
+
+
+        const status =
+            statusFilter.value;
+
+
+        const filtered =
+            titles.filter(title => {
+
+                const matchesSearch =
+                    !search ||
+                    title.name
+                        .toLowerCase()
+                        .includes(search) ||
+
+                    (title.originalName || "")
+                        .toLowerCase()
+                        .includes(search);
+
+
+                const matchesStatus =
+                    status === "all" ||
+                    title.status === status;
+
+
+                return (
+                    matchesSearch &&
+                    matchesStatus
+                );
+
+            });
+
+
+        if (!filtered.length) {
+
+            grid.innerHTML = `
+
+                <div class="empty-titles">
+
+                    <div class="empty-titles-icon">
+                        🎬
+                    </div>
+
+                    <div>
+                        По вашему запросу
+                        ничего не найдено.
+                    </div>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        grid.innerHTML =
+            filtered.map(
+                title => createTitleCard(title)
+            ).join("");
+
+    }
+
+
+    /* =====================================
+       КАРТОЧКА
+    ===================================== */
+
+    function createTitleCard(title) {
+
+        const image =
+            title.image &&
+            title.image.trim();
+
+
+        const cover = image
+
+            ? `
+
+                <img
+                    src="${escapeHtml(image)}"
+                    alt="${escapeHtml(title.name)}"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+
+                <div
+                    class="cover-placeholder"
+                    style="display:none;">
+                    🎬
+                </div>
+
+              `
+
+            : `
+
+                <div class="cover-placeholder">
+                    🎬
+                </div>
+
+              `;
+
+
+        const rating =
+            Number(title.rating || 0)
+                .toFixed(1);
+
+
+        return `
+
+            <article
+                class="title-card">
+
+
+                <div class="title-cover">
+
+                    ${cover}
+
+
+                    <span
+                        class="status-badge status-${escapeHtml(title.status)}">
+
+                        ${escapeHtml(
+                            getStatusText(title.status)
+                        )}
+
+                    </span>
+
+
+                    <span class="rating">
+
+                        ⭐ ${rating}
+
+                    </span>
+
+                </div>
+
+
+                <div class="title-content">
+
+
+                    <div class="title-name">
+
+                        ${escapeHtml(title.name)}
+
+                    </div>
+
+
+                    ${
+                        title.originalName
+
+                        ?
+
+                        `<div class="title-original">
+                            ${escapeHtml(title.originalName)}
+                        </div>`
+
+                        :
+
+                        ""
+                    }
+
+
+                    <div class="title-description">
+
+                        ${escapeHtml(
+                            title.description ||
+                            "Описание отсутствует."
+                        )}
+
+                    </div>
+
+
+                    <div class="title-meta">
+
+                        <span>
+                            🎬 ${escapeHtml(
+                                title.episodes || 0
+                            )} серий
+                        </span>
+
+                        <span>
+                            📅 ${escapeHtml(
+                                title.year || "—"
+                            )}
+                        </span>
+
+                    </div>
+
+
+                    <div class="title-actions">
+
+                        <a
+                            href="title.html?id=${encodeURIComponent(title.id)}"
+                            class="title-open">
+
+                            Открыть →
+
+                        </a>
+
+
+                        ${
+                            ADMIN_MODE
+
+                            ?
+
+                            `
+
+                            <button
+                                class="edit-title"
+                                onclick="editTitle('${escapeHtml(title.id)}')">
+
+                                ✏️
+
+                            </button>
+
+
+                            <button
+                                class="delete-title"
+                                onclick="deleteTitle('${escapeHtml(title.id)}')">
+
+                                🗑️
+
+                            </button>
+
+                            `
+
+                            :
+
+                            ""
+                        }
+
+                    </div>
+
+                </div>
+
+            </article>
+
+        `;
+
+    }
+
+
+    /* =====================================
+       ADD MODAL
+    ===================================== */
+
+    function openAddTitleModal() {
+
+        document
+            .getElementById("titleForm")
+            .reset();
+
+
+        document
+            .getElementById("editTitleId")
+            .value = "";
+
+
+        document
+            .getElementById("titleId")
+            .disabled = false;
+
+
+        document
+            .getElementById("modalTitle")
+            .textContent =
+            "➕ Добавить тайтл";
+
+
+        document
+            .getElementById("titleModal")
+            .classList.add("active");
+
+
+        document.body.style.overflow =
+            "hidden";
+
+    }
+
+
+    /* =====================================
+       EDIT
+    ===================================== */
+
+    function editTitle(id) {
+
+        const title =
+            titles.find(
+                item => item.id === id
+            );
+
+
+        if (!title) {
+            return;
+        }
+
+
+        document
+            .getElementById("modalTitle")
+            .textContent =
+            "✏️ Редактировать тайтл";
+
+
+        document
+            .getElementById("editTitleId")
+            .value = title.id;
+
+
+        document
+            .getElementById("titleId")
+            .value = title.id;
+
+
+        document
+            .getElementById("titleId")
+            .disabled = true;
+
+
+        document
+            .getElementById("titleName")
+            .value = title.name || "";
+
+
+        document
+            .getElementById("titleOriginal")
+            .value = title.originalName || "";
+
+
+        document
+            .getElementById("titleImage")
+            .value = title.image || "";
+
+
+        document
+            .getElementById("titleStatus")
+            .value =
+            title.status || "ongoing";
+
+
+        document
+            .getElementById("titleGenre")
+            .value = title.genre || "";
+
+
+        document
+            .getElementById("titleEpisodes")
+            .value =
+            title.episodes || "";
+
+
+        document
+            .getElementById("titleRating")
+            .value =
+            title.rating || "";
+
+
+        document
+            .getElementById("titleDescription")
+            .value =
+            title.description || "";
+
+
+        document
+            .getElementById("titleYear")
+            .value =
+            title.year || "";
+
+
+        document
+            .getElementById("titleModal")
+            .classList.add("active");
+
+
+        document.body.style.overflow =
+            "hidden";
+
+    }
+
+
+    /* =====================================
+       SAVE
+    ===================================== */
+
+    document
+        .getElementById("titleForm")
+        .addEventListener(
+            "submit",
+            function(event) {
+
+                event.preventDefault();
+
+
+                const editId =
+                    document
+                        .getElementById("editTitleId")
+                        .value;
+
+
+                const data = {
+
+                    id:
+                        document
+                            .getElementById("titleId")
+                            .value
+                            .trim(),
+
+                    name:
+                        document
+                            .getElementById("titleName")
+                            .value
+                            .trim(),
+
+                    originalName:
+                        document
+                            .getElementById("titleOriginal")
+                            .value
+                            .trim(),
+
+                    image:
+                        document
+                            .getElementById("titleImage")
+                            .value
+                            .trim(),
+
+                    status:
+                        document
+                            .getElementById("titleStatus")
+                            .value,
+
+                    genre:
+                        document
+                            .getElementById("titleGenre")
+                            .value
+                            .trim(),
+
+                    episodes:
+                        Number(
+                            document
+                                .getElementById("titleEpisodes")
+                                .value
+                        ) || 0,
+
+                    rating:
+                        Number(
+                            document
+                                .getElementById("titleRating")
+                                .value
+                        ) || 0,
+
+                    description:
+                        document
+                            .getElementById("titleDescription")
+                            .value
+                            .trim(),
+
+                    year:
+                        Number(
+                            document
+                                .getElementById("titleYear")
+                                .value
+                        ) || 2026
+
+                };
+
+
+                /* EDIT */
+
+                if (editId) {
+
+                    const index =
+                        titles.findIndex(
+                            item =>
+                                item.id === editId
+                        );
+
+
+                    if (index !== -1) {
+
+                        titles[index] =
+                            data;
+
+                    }
+
+                }
+
+
+                /* ADD */
+
+                else {
+
+                    const exists =
+                        titles.some(
+                            item =>
+                                item.id === data.id
+                        );
+
+
+                    if (exists) {
+
+                        alert(
+                            "Тайтл с таким ID уже существует."
+                        );
+
+                        return;
+                    }
+
+
+                    titles.push(data);
+
+                }
+
+
+                saveTitles();
+
+                renderTitles();
+
+                closeTitleModal();
+
+            }
+        );
+
+
+    /* =====================================
+       DELETE
+    ===================================== */
+
+    function deleteTitle(id) {
+
+        const title =
+            titles.find(
+                item => item.id === id
+            );
+
+
+        if (!title) {
+            return;
+        }
+
+
+        const confirmed =
+            confirm(
+                `Удалить тайтл "${title.name}"?`
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        titles =
+            titles.filter(
+                item => item.id !== id
+            );
+
+
+        saveTitles();
+
+        renderTitles();
+
+    }
+
+
+    /* =====================================
+       CLOSE MODAL
+    ===================================== */
+
+    function closeTitleModal() {
+
+        document
+            .getElementById("titleModal")
+            .classList.remove("active");
+
+
+        document.body.style.overflow = "";
+
+
+        document
+            .getElementById("titleId")
+            .disabled = false;
+
+    }
+
+
+    /* =====================================
+       SEARCH BUTTON
+    ===================================== */
+
+    function focusSearch() {
+
+        searchInput.focus();
+
+        window.scrollTo({
+            top: 300,
+            behavior: "smooth"
+        });
+
+    }
+
+
+    /* =====================================
+       ESC
+    ===================================== */
+
+    document.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (event.key === "Escape") {
+                closeTitleModal();
+            }
+
+        }
+    );
+
+
+    /* =====================================
+       CLICK OUTSIDE
+    ===================================== */
+
+    document
+        .getElementById("titleModal")
+        .addEventListener(
+            "click",
+            function(event) {
+
+                if (event.target === this) {
+                    closeTitleModal();
+                }
+
+            }
+        );
+
+
+    /* =====================================
+       HTML ESCAPE
+    ===================================== */
+
+    function escapeHtml(value) {
+
+        return String(value)
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+
+    /* =====================================
+       ADMIN MODE
+       
+       ВРЕМЕННО.
+       Потом заменим Firebase Auth.
+    ===================================== */
+
+    const ADMIN_MODE = true;
+
+
+    if (ADMIN_MODE) {
+
+        document
+            .getElementById("adminPanel")
+            .classList.add("visible");
+
+    }
+
+
+    /* =====================================
+       START
+    ===================================== */
+
+    renderTitles();
+
+</script>
+
+</body>
+</html>
