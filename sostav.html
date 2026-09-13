@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Состав команды — My Studio</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* =========================
+           СОСТАВ
+        ========================= */
+
+        .page-header {
+            padding: 100px 0 40px;
+            text-align: center;
+        }
+
+        .page-header .label {
+            color: #a78bfa;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .page-header h1 {
+            margin-top: 10px;
+            font-size: clamp(36px, 5vw, 58px);
+        }
+
+        .page-header p {
+            margin-top: 12px;
+            color: #aaa5b8;
+        }
+
+        .team-statistics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 60px;
+        }
+
+        .team-stat {
+            padding: 25px;
+            text-align: center;
+
+            background: #12101c;
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 18px;
+        }
+
+        .team-stat-number {
+            display: block;
+            color: #a78bfa;
+            font-size: 34px;
+            font-weight: 800;
+        }
+
+        .team-stat-label {
+            margin-top: 5px;
+            color: #aaa5b8;
+            font-size: 13px;
+        }
+
+        .team-section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            margin-bottom: 25px;
+        }
+
+        .team-section-title h2 {
+            font-size: 28px;
+        }
+
+        .team-section-title::before {
+            content: "";
+            width: 5px;
+            height: 35px;
+
+            border-radius: 10px;
+
+            background: #8b5cf6;
+        }
+
+        .team-list {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+
+            margin-bottom: 70px;
+        }
+
+        .team-card {
+            position: relative;
+
+            padding: 25px 18px;
+
+            text-align: center;
+
+            background: #12101c;
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 18px;
+
+            transition: .25s;
+        }
+
+        .team-card:hover {
+            transform: translateY(-5px);
+
+            border-color:
+                rgba(139,92,246,.5);
+
+            background: #181523;
+
+            box-shadow:
+                0 15px 40px rgba(0,0,0,.3);
+        }
+
+        .team-avatar {
+            width: 105px;
+            height: 105px;
+
+            margin: 0 auto 15px;
+
+            display: block;
+
+            object-fit: cover;
+
+            border-radius: 50%;
+
+            border: 3px solid #8b5cf6;
+
+            background: #21152f;
+        }
+
+        .team-name {
+            color: #a78bfa;
+
+            font-size: 19px;
+            font-weight: 800;
+
+            word-break: break-word;
+        }
+
+        .team-role {
+            margin-top: 6px;
+
+            color: #888394;
+
+            font-size: 13px;
+        }
+
+        .team-bio {
+            margin-top: 12px;
+
+            color: #aaa5b8;
+
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .empty-team {
+            grid-column: 1 / -1;
+
+            padding: 40px;
+
+            text-align: center;
+
+            color: #666;
+        }
+
+        /* =========================
+           ADMIN
+        ========================= */
+
+        .admin-panel {
+            display: none;
+
+            align-items: center;
+            gap: 12px;
+
+            margin-bottom: 30px;
+            padding: 15px;
+
+            background: rgba(139,92,246,.08);
+
+            border: 1px solid rgba(139,92,246,.25);
+
+            border-radius: 15px;
+        }
+
+        .admin-panel.visible {
+            display: flex;
+        }
+
+        .admin-button {
+            padding: 10px 18px;
+
+            border: 0;
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #8b5cf6,
+                    #5b21b6
+                );
+
+            color: white;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: .2s;
+        }
+
+        .admin-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .admin-status {
+            margin-left: auto;
+
+            color: #a78bfa;
+
+            font-size: 13px;
+        }
+
+        .admin-actions {
+            position: absolute;
+
+            top: 10px;
+            right: 10px;
+
+            display: flex;
+            gap: 5px;
+        }
+
+        .admin-action {
+            width: 32px;
+            height: 32px;
+
+            border: 0;
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            color: white;
+        }
+
+        .edit-button {
+            background: #6d28d9;
+        }
+
+        .delete-button {
+            background: #991b1b;
+        }
+
+        /* =========================
+           MODAL
+        ========================= */
+
+        .modal {
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 1000;
+
+            display: none;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            background: rgba(0,0,0,.85);
+
+            backdrop-filter: blur(7px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-window {
+            position: relative;
+
+            width: min(600px, 100%);
+            max-height: 90vh;
+
+            overflow-y: auto;
+
+            padding: 30px;
+
+            background: #120d1b;
+
+            border: 1px solid #6d28d9;
+
+            border-radius: 20px;
+        }
+
+        .modal-window h2 {
+            margin-bottom: 25px;
+
+            color: #a78bfa;
+
+            text-align: center;
+        }
+
+        .close-modal {
+            position: absolute;
+
+            top: 12px;
+            right: 15px;
+
+            width: 35px;
+            height: 35px;
+
+            border: 0;
+            background: transparent;
+
+            color: #888;
+
+            font-size: 22px;
+
+            cursor: pointer;
+        }
+
+        .close-modal:hover {
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #aaa5b8;
+
+            font-size: 13px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+
+            padding: 12px 14px;
+
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 10px;
+
+            outline: none;
+
+            background: #0d0a12;
+            color: white;
+
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #8b5cf6;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .save-button {
+            width: 100%;
+
+            margin-top: 10px;
+            padding: 14px;
+
+            border: 0;
+            border-radius: 12px;
+
+            background: #8b5cf6;
+            color: white;
+
+            font-weight: 800;
+
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background: #a78bfa;
+        }
+
+        @media (max-width: 850px) {
+
+            .team-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .team-statistics {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 550px) {
+
+            .team-list {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-panel {
+                flex-wrap: wrap;
+            }
+
+            .admin-status {
+                width: 100%;
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="container header-inner">
+
+        <a href="index.html" class="logo">
+            <span class="logo-main">MY</span>
+            <span class="logo-sub">STUDIO</span>
+        </a>
+
+        <nav class="navigation">
+            <a href="index.html">Главная</a>
+            <a href="titles.html">Тайтлы</a>
+            <a href="sostav.html" class="active">Состав</a>
+            <a href="#">DUB-in</a>
+        </nav>
+
+        <div class="header-actions">
+
+            <button
+                class="search-button"
+                onclick="location.href='search.html'">
+                🔍
+            </button>
+
+            <button
+                class="login-button"
+                onclick="alert('Авторизация будет подключена позже')">
+                Войти
+            </button>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<main>
+
+    <section class="page-header">
+
+        <div class="container">
+
+            <span class="label">
+                TEAM
+            </span>
+
+            <h1>
+                Состав команды
+            </h1>
+
+            <p>
+                Люди, которые создают нашу озвучку.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <section>
+
+        <div class="container">
+
+            <!-- ADMIN -->
+
+            <div
+                id="adminPanel"
+                class="admin-panel">
+
+                <button
+                    class="admin-button"
+                    onclick="openAddModal()">
+                    ➕ Добавить участника
+                </button>
+
+                <button
+                    class="admin-button"
+                    onclick="renderTeam()">
+                    🔄 Обновить
+                </button>
+
+                <span class="admin-status">
+                    👑 Режим администратора
+                </span>
+
+            </div>
+
+
+            <!-- STATISTICS -->
+
+            <div class="team-statistics">
+
+                <div class="team-stat">
+                    <span
+                        id="totalCount"
+                        class="team-stat-number">
+                        0
+                    </span>
+
+                    <span class="team-stat-label">
+                        Всего участников
+                    </span>
+                </div>
+
+                <div class="team-stat">
+                    <span
+                        id="dubberCount"
+                        class="team-stat-number">
+                        0
+                    </span>
+
+                    <span class="team-stat-label">
+                        Дабберов
+                    </span>
+                </div>
+
+                <div class="team-stat">
+                    <span
+                        id="techCount"
+                        class="team-stat-number">
+                        0
+                    </span>
+
+                    <span class="team-stat-label">
+                        Технический персонал
+                    </span>
+                </div>
+
+            </div>
+
+
+            <!-- DUBBERS -->
+
+            <div class="team-section-title">
+
+                <h2>
+                    🎙️ Дабберы
+                </h2>
+
+            </div>
+
+            <div
+                id="dubberList"
+                class="team-list">
+            </div>
+
+
+            <!-- TECH -->
+
+            <div class="team-section-title">
+
+                <h2>
+                    🔧 Технический персонал
+                </h2>
+
+            </div>
+
+            <div
+                id="techList"
+                class="team-list">
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="container footer-inner">
+
+        <div>
+
+            <div class="footer-logo">
+                MY STUDIO
+            </div>
+
+            <p>
+                Студия озвучки и команда,
+                объединённая любимыми проектами.
+            </p>
+
+        </div>
+
+        <div class="footer-links">
+
+            <a href="index.html">
+                Главная
+            </a>
+
+            <a href="titles.html">
+                Тайтлы
+            </a>
+
+            <a href="sostav.html">
+                Состав
+            </a>
+
+            <a href="#">
+                DUB-in
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="copyright">
+        © 2026 My Studio
+    </div>
+
+</footer>
+
+
+<!-- =========================
+     MODAL
+========================= -->
+
+<div
+    id="voiceModal"
+    class="modal">
+
+    <div class="modal-window">
+
+        <button
+            class="close-modal"
+            onclick="closeModal()">
+            ✕
+        </button>
+
+        <h2 id="modalTitle">
+            Добавить участника
+        </h2>
+
+        <form id="voiceForm">
+
+            <input
+                type="hidden"
+                id="editId">
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label>
+                        ID
+                    </label>
+
+                    <input
+                        id="voiceId"
+                        type="text"
+                        placeholder="например: alex"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Имя
+                    </label>
+
+                    <input
+                        id="voiceName"
+                        type="text"
+                        placeholder="Имя"
+                        required>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label>
+                        Имя на английском
+                    </label>
+
+                    <input
+                        id="voiceNameEn"
+                        type="text"
+                        placeholder="English name">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Имя на русском
+                    </label>
+
+                    <input
+                        id="voiceNameRu"
+                        type="text"
+                        placeholder="Имя">
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Ссылка на аватар
+                </label>
+
+                <input
+                    id="voiceImage"
+                    type="text"
+                    placeholder="images/avatar.jpg">
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label>
+                        Тип роли
+                    </label>
+
+                    <select id="voiceRole">
+
+                        <option value="dubber">
+                            🎙️ Даббер
+                        </option>
+
+                        <option value="tech">
+                            🔧 Технический персонал
+                        </option>
+
+                        <option value="both">
+                            🎙️ + 🔧 Оба
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Статус
+                    </label>
+
+                    <input
+                        id="voiceStatus"
+                        type="text"
+                        placeholder="Даббер">
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Год присоединения
+                </label>
+
+                <input
+                    id="voiceJoinDate"
+                    type="text"
+                    placeholder="2026">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Биография
+                </label>
+
+                <textarea
+                    id="voiceBio"
+                    placeholder="Расскажите об участнике..."></textarea>
+
+            </div>
+
+
+            <button
+                class="save-button"
+                type="submit">
+
+                💾 Сохранить
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* =====================================
+       ДАННЫЕ
+    ===================================== */
+
+    let voices = JSON.parse(
+        localStorage.getItem("myStudioVoices")
+    ) || [
+        {
+            id: "alex",
+            name: "Alex",
+            nameEn: "Alex",
+            nameRu: "Алекс",
+            image: "",
+            role: "dubber",
+            status: "Даббер",
+            joinDate: "2026",
+            bio: "Участник студии."
+        },
+
+        {
+            id: "tech",
+            name: "Tech",
+            nameEn: "Tech",
+            nameRu: "Тех",
+            image: "",
+            role: "tech",
+            status: "Технический специалист",
+            joinDate: "2026",
+            bio: "Работает над технической частью проектов."
+        }
+    ];
+
+
+    /* =====================================
+       СОХРАНЕНИЕ
+    ===================================== */
+
+    function saveData() {
+
+        localStorage.setItem(
+            "myStudioVoices",
+            JSON.stringify(voices)
+        );
+
+    }
+
+
+    /* =====================================
+       PLACEHOLDER
+    ===================================== */
+
+    function getAvatar(voice) {
+
+        if (voice.image && voice.image.trim()) {
+            return voice.image;
+        }
+
+        return "https://via.placeholder.com/150/21152f/a78bfa?text=USER";
+
+    }
+
+
+    /* =====================================
+       ОТРИСОВКА
+    ===================================== */
+
+    function renderTeam() {
+
+        const dubberList =
+            document.getElementById("dubberList");
+
+        const techList =
+            document.getElementById("techList");
+
+
+        const dubbers =
+            voices.filter(
+                voice =>
+                    voice.role === "dubber" ||
+                    voice.role === "both"
+            );
+
+
+        const tech =
+            voices.filter(
+                voice =>
+                    voice.role === "tech" ||
+                    voice.role === "both"
+            );
+
+
+        document.getElementById("totalCount")
+            .textContent = voices.length;
+
+        document.getElementById("dubberCount")
+            .textContent = dubbers.length;
+
+        document.getElementById("techCount")
+            .textContent = tech.length;
+
+
+        dubberList.innerHTML =
+            createCards(dubbers);
+
+
+        techList.innerHTML =
+            createCards(tech);
+
+    }
+
+
+    /* =====================================
+       КАРТОЧКИ
+    ===================================== */
+
+    function createCards(list) {
+
+        if (!list.length) {
+
+            return `
+                <div class="empty-team">
+                    Пока здесь нет участников.
+                </div>
+            `;
+
+        }
+
+
+        return list.map(voice => {
+
+            return `
+
+                <article
+                    class="team-card"
+                    data-id="${escapeHtml(voice.id)}">
+
+                    <div class="admin-actions">
+
+                        <button
+                            class="admin-action edit-button"
+                            onclick="editVoice('${escapeHtml(voice.id)}')">
+                            ✏️
+                        </button>
+
+                        <button
+                            class="admin-action delete-button"
+                            onclick="deleteVoice('${escapeHtml(voice.id)}')">
+                            🗑️
+                        </button>
+
+                    </div>
+
+
+                    <img
+                        class="team-avatar"
+                        src="${escapeHtml(getAvatar(voice))}"
+                        alt="${escapeHtml(voice.name)}"
+                        onerror="this.src='https://via.placeholder.com/150/21152f/a78bfa?text=USER'">
+
+
+                    <div class="team-name">
+                        ${escapeHtml(voice.name)}
+                    </div>
+
+
+                    <div class="team-role">
+                        ${escapeHtml(voice.status || "Участник")}
+                    </div>
+
+
+                    ${
+                        voice.bio
+                        ?
+                        `<div class="team-bio">
+                            ${escapeHtml(voice.bio)}
+                        </div>`
+                        :
+                        ""
+                    }
+
+                </article>
+
+            `;
+
+        }).join("");
+
+    }
+
+
+    /* =====================================
+       ДОБАВЛЕНИЕ
+    ===================================== */
+
+    function openAddModal() {
+
+        document.getElementById("modalTitle")
+            .textContent = "➕ Добавить участника";
+
+
+        document.getElementById("voiceForm")
+            .reset();
+
+
+        document.getElementById("editId")
+            .value = "";
+
+
+        document.getElementById("voiceId")
+            .disabled = false;
+
+
+        document.getElementById("voiceModal")
+            .classList.add("active");
+
+
+        document.body.style.overflow = "hidden";
+
+    }
+
+
+    /* =====================================
+       РЕДАКТИРОВАНИЕ
+    ===================================== */
+
+    function editVoice(id) {
+
+        const voice =
+            voices.find(item => item.id === id);
+
+
+        if (!voice) {
+            return;
+        }
+
+
+        document.getElementById("modalTitle")
+            .textContent =
+            "✏️ Редактировать участника";
+
+
+        document.getElementById("editId")
+            .value = voice.id;
+
+
+        document.getElementById("voiceId")
+            .value = voice.id;
+
+
+        document.getElementById("voiceId")
+            .disabled = true;
+
+
+        document.getElementById("voiceName")
+            .value = voice.name || "";
+
+
+        document.getElementById("voiceNameEn")
+            .value = voice.nameEn || "";
+
+
+        document.getElementById("voiceNameRu")
+            .value = voice.nameRu || "";
+
+
+        document.getElementById("voiceImage")
+            .value = voice.image || "";
+
+
+        document.getElementById("voiceRole")
+            .value = voice.role || "dubber";
+
+
+        document.getElementById("voiceStatus")
+            .value = voice.status || "";
+
+
+        document.getElementById("voiceJoinDate")
+            .value = voice.joinDate || "";
+
+
+        document.getElementById("voiceBio")
+            .value = voice.bio || "";
+
+
+        document.getElementById("voiceModal")
+            .classList.add("active");
+
+
+        document.body.style.overflow = "hidden";
+
+    }
+
+
+    /* =====================================
+       СОХРАНЕНИЕ
+    ===================================== */
+
+    document
+        .getElementById("voiceForm")
+        .addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+
+            const editId =
+                document.getElementById("editId").value;
+
+
+            const data = {
+
+                id:
+                    document.getElementById("voiceId")
+                    .value.trim(),
+
+                name:
+                    document.getElementById("voiceName")
+                    .value.trim(),
+
+                nameEn:
+                    document.getElementById("voiceNameEn")
+                    .value.trim(),
+
+                nameRu:
+                    document.getElementById("voiceNameRu")
+                    .value.trim(),
+
+                image:
+                    document.getElementById("voiceImage")
+                    .value.trim(),
+
+                role:
+                    document.getElementById("voiceRole")
+                    .value,
+
+                status:
+                    document.getElementById("voiceStatus")
+                    .value.trim(),
+
+                joinDate:
+                    document.getElementById("voiceJoinDate")
+                    .value.trim() || "2026",
+
+                bio:
+                    document.getElementById("voiceBio")
+                    .value.trim()
+
+            };
+
+
+            if (editId) {
+
+                const index =
+                    voices.findIndex(
+                        voice => voice.id === editId
+                    );
+
+
+                if (index !== -1) {
+                    voices[index] = data;
+                }
+
+            } else {
+
+                const exists =
+                    voices.some(
+                        voice => voice.id === data.id
+                    );
+
+
+                if (exists) {
+
+                    alert(
+                        "Участник с таким ID уже существует."
+                    );
+
+                    return;
+                }
+
+
+                voices.push(data);
+
+            }
+
+
+            saveData();
+
+            renderTeam();
+
+            closeModal();
+
+        });
+
+
+    /* =====================================
+       УДАЛЕНИЕ
+    ===================================== */
+
+    function deleteVoice(id) {
+
+        const voice =
+            voices.find(item => item.id === id);
+
+
+        if (!voice) {
+            return;
+        }
+
+
+        const confirmed =
+            confirm(
+                `Удалить участника "${voice.name}"?`
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        voices =
+            voices.filter(
+                item => item.id !== id
+            );
+
+
+        saveData();
+
+        renderTeam();
+
+    }
+
+
+    /* =====================================
+       ЗАКРЫТИЕ
+    ===================================== */
+
+    function closeModal() {
+
+        document
+            .getElementById("voiceModal")
+            .classList.remove("active");
+
+
+        document.body.style.overflow = "";
+
+        document.getElementById("voiceId")
+            .disabled = false;
+
+    }
+
+
+    /* =====================================
+       ESCAPE
+    ===================================== */
+
+    document.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (event.key === "Escape") {
+                closeModal();
+            }
+
+        }
+    );
+
+
+    /* =====================================
+       КЛИК ПО ФОНУ
+    ===================================== */
+
+    document
+        .getElementById("voiceModal")
+        .addEventListener(
+            "click",
+            function(event) {
+
+                if (event.target === this) {
+                    closeModal();
+                }
+
+            }
+        );
+
+
+    /* =====================================
+       ЗАЩИТА HTML
+    ===================================== */
+
+    function escapeHtml(value) {
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+
+    /* =====================================
+       АДМИН РЕЖИМ
+       
+       ВРЕМЕННО:
+       true = показывать админку
+       false = скрыть
+       
+       Позже заменим Firebase Auth.
+    ===================================== */
+
+    const ADMIN_MODE = true;
+
+
+    if (ADMIN_MODE) {
+
+        document
+            .getElementById("adminPanel")
+            .classList.add("visible");
+
+    }
+
+
+    /* =====================================
+       START
+    ===================================== */
+
+    renderTeam();
+
+</script>
+
+</body>
+</html>
